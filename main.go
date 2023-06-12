@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
@@ -18,6 +19,12 @@ const (
 	FOREGROUND_GREEN     = 0x0002
 	FOREGROUND_RED       = 0x0004
 	FOREGROUND_INTENSITY = 0x0008
+)
+
+const (
+	FIND_PROCESS_NAME = "-f"
+	HELP              = "-help"
+	KILL              = "-K"
 )
 
 var (
@@ -69,15 +76,20 @@ func main() {
 	fmt.Println("1. List running processes")
 	fmt.Println("2. Terminate a process")
 	fmt.Println("3. Monitor process resource usage")
-	fmt.Println("4. Exit")
+	fmt.Println("4. See help")
+	fmt.Println("5. Exit")
 	for {
 		//clearConsole()
 
 		fmt.Print("Enter your choice: ")
 
 		var choice int
-		fmt.Scanln(&choice)
+		var l1 string
+		//var l2 string
+		//var l3 string
+		fmt.Scanln(&l1)
 
+		fmt.Println("tttttttt:", l1)
 		switch choice {
 		case 1:
 			listProcesses()
@@ -85,15 +97,25 @@ func main() {
 			terminateProcess()
 		case 3:
 			monitorResourceUsage()
-		case 4:
+		case 5:
 			fmt.Println("Exiting...")
 			return
+		case 4:
+			file, err := os.Open("help")
+			defer file.Close()
+			r := bufio.NewReader(file)
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Println(r.ReadString(1))
 		default:
 			fmt.Println("Invalid choice. Please try again.")
 		}
 
-		fmt.Print("Press Enter to next")
-		fmt.Scanln()
+		//fmt.Print("Press Enter to next:")
+		//fmt.Scanln()
 	}
 }
 
@@ -121,7 +143,7 @@ func listProcesses() {
 
 // 终止进程
 func terminateProcess() {
-	clearConsole()
+	//clearConsole()
 	fmt.Print("Enter the process ID or name to terminate: ")
 	var identifier string
 	fmt.Scanln(&identifier)
@@ -129,7 +151,8 @@ func terminateProcess() {
 	cmd := exec.Command("taskkill", "/F", "/IM", identifier)
 	err := cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
+		fmt.Println(err)
 	}
 
 	fmt.Println("Process terminated.")

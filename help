@@ -1,0 +1,6 @@
+Usage: pt [-options] class [args...]
+           (to execute)
+where options include:
+    -f      根据进程名称查找PID
+    -help   帮助信息
+    -k      根据PID结束进程
